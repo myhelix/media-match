@@ -1,10 +1,18 @@
-/*! MediaMatch v.2.0.2 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
+/*! MediaMatch v.2.0.3 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
 
-window.matchMedia || (window.matchMedia = function (win) {
+(function (factory) {
+    var matchMedia = window.matchMedia || factory();
+
+    if (typeof exports === 'object') {
+        module.exports = matchMedia;
+    } else {
+        window.matchMedia = matchMedia;
+    }
+}(function () {
     'use strict';
 
     // Internal globals
-    var _doc        = win.document,
+    var _doc        = window.document,
         _viewport   = _doc.documentElement,
         _queries    = [],
         _queryID    = 0,
@@ -169,12 +177,12 @@ window.matchMedia || (window.matchMedia = function (win) {
          */
         _setFeature = function () {
             // Sets properties of '_features' that change on resize and/or orientation.
-            var w   = win.innerWidth || _viewport.clientWidth,
-                h   = win.innerHeight || _viewport.clientHeight,
-                dw  = win.screen.width,
-                dh  = win.screen.height,
-                c   = win.screen.colorDepth,
-                x   = win.devicePixelRatio;
+            var w   = window.innerWidth || _viewport.clientWidth,
+                h   = window.innerHeight || _viewport.clientHeight,
+                dw  = window.screen.width,
+                dh  = window.screen.height,
+                c   = window.screen.colorDepth,
+                x   = window.devicePixelRatio;
 
             _features.width                     = w;
             _features.height                    = h;
@@ -185,7 +193,7 @@ window.matchMedia || (window.matchMedia = function (win) {
             _features.color                     = c;
             _features['color-index']            = Math.pow(2, c);
             _features.orientation               = (h >= w ? 'portrait' : 'landscape');
-            _features.resolution                = (x && x * 96) || win.screen.deviceXDPI || 96;
+            _features.resolution                = (x && x * 96) || window.screen.deviceXDPI || 96;
             _features['device-pixel-ratio']     = x || 1;
         },
 
@@ -216,7 +224,7 @@ window.matchMedia || (window.matchMedia = function (win) {
                                 if (query.listeners) {
                                     for (var i = 0, il = query.listeners.length; i < il; i++) {
                                         if (query.listeners[i]) {
-                                            query.listeners[i].call(win, query.mql);
+                                            query.listeners[i].call(window, query.mql);
                                         }
                                     }
                                 }
@@ -225,7 +233,7 @@ window.matchMedia || (window.matchMedia = function (win) {
                     } while(qIndex--);
                 }
 
-                
+
             }, 10);
         },
 
@@ -241,7 +249,7 @@ window.matchMedia || (window.matchMedia = function (win) {
                 typeLength  = typeList.length,
                 cssText     = '#mediamatchjs { position: relative; z-index: 0; }',
                 eventPrefix = '',
-                addEvent    = win.addEventListener || (eventPrefix = 'on') && win.attachEvent;
+                addEvent    = window.addEventListener || (eventPrefix = 'on') && window.attachEvent;
 
             style.type  = 'text/css';
             style.id    = 'mediamatchjs';
@@ -249,7 +257,7 @@ window.matchMedia || (window.matchMedia = function (win) {
             head.appendChild(style);
 
             // Must be placed after style is inserted into the DOM for IE
-            info = (win.getComputedStyle && win.getComputedStyle(style)) || style.currentStyle;
+            info = (window.getComputedStyle && window.getComputedStyle(style)) || style.currentStyle;
 
             // Create media blocks to test for media type
             for ( ; typeIndex < typeLength; typeIndex++) {
@@ -322,4 +330,4 @@ window.matchMedia || (window.matchMedia = function (win) {
 
         return mql;
     };
-}(window));
+}));
